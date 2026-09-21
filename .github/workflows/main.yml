@@ -12,14 +12,13 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
           
-      - name: Set up Flutter
+      - name: Set up Flutter (Latest Custom Version)
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.0'
+          channel: 'stable' # 🌟 強迫雲端下載最新最穩定的版本，徹底解決 3.7.0 舊版本衝突 Bug
           
       - name: Unzip Real App Source
         run: |
-          # 直接在根目錄解壓原始碼
           unzip -o app_source.zip -d .
           ls -la
           

@@ -6,7 +6,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up Java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'zulu'
           java-version: '17'
@@ -15,7 +15,16 @@ jobs:
         with:
           flutter-version: '3.29.0'
       - name: Unzip Project
-        run: unzip app01.zip -d .
+        run: |
+          unzip app01.zip -d extracted_project
+          # 自動檢查是否多包了一層同名資料夾，並將其移動到根目錄
+          if [ -d "extracted_project/app01" ]; then
+            mv extracted_project/app01/* .
+            mv extracted_project/app01/.* . 2>/dev/null || true
+          else
+            mv extracted_project/* .
+            mv extracted_project/.* . 2>/dev/null || true
+          fi
       - name: Build APK
         run: flutter build apk --release
       - name: Upload APK Artifact

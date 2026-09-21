@@ -17,21 +17,10 @@ jobs:
         with:
           flutter-version: '3.29.0'
           
-      - name: Unzip Project Directly
+      - name: Unzip Real App Source
         run: |
-          # 直接在當前根目錄解壓，並自動覆蓋可能存在的同名結構
-          unzip -o app01.zip -d .
-          
-          # 如果解壓後發現被包在子資料夾內，自動將裡面的東西撈出來到最外層
-          if [ -d "app01" ]; then
-            cp -r app01/* . 2>/dev/null || true
-            cp -r app01/.* . 2>/dev/null || true
-          elif [ -d "app_retirement" ]; then
-            cp -r app_retirement/* . 2>/dev/null || true
-            cp -r app_retirement/.* . 2>/dev/null || true
-          fi
-          
-          # 列出當前目錄內容，確保 pubspec.yaml 確實存在於此
+          # 直接在根目錄解壓原始碼
+          unzip -o app_source.zip -d .
           ls -la
           
       - name: Build APK

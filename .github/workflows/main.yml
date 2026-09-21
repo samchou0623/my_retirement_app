@@ -14,17 +14,18 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.29.0'
-      - name: Unzip Project
+      - name: Unzip and Locate Project
         run: |
+          mkdir extracted_project
           unzip app01.zip -d extracted_project
-          # 自動檢查是否多包了一層同名資料夾，並將其移動到根目錄
-          if [ -d "extracted_project/app01" ]; then
-            mv extracted_project/app01/* .
-            mv extracted_project/app01/.* . 2>/dev/null || true
-          else
-            mv extracted_project/* .
-            mv extracted_project/.* . 2>/dev/null || true
-          fi
+          
+          # 地毯式搜尋 pubspec.yaml 所在的真實路徑
+          TARGET_DIR=$(find extracted_project -name "pubspec.yaml" -exec dirname {} \;)
+          echo "真實專案路徑位於: $TARGET_DIR"
+          
+          # 將該路徑下的所有內容搬移到目前根目錄
+          mv $TARGET_DIR/* .
+          mv $TARGET_DIR/.* . 2>/dev/null || true
       - name: Build APK
         run: flutter build apk --release
       - name: Upload APK Artifact
